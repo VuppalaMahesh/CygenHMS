@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/bootstrap.min.css'%}">
+<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/sb-admin.css'%}">
+<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/ehr.css'%}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<style>
+    td,
+    th {
+        text-align: left;
+    }
+
+    .table caption {
+        border: inherit;
+        background-color: lightgrey;
+    }
+    #lab,#opd,  #testbutton, #opdbutton{
+        display:none
+    }
+</style>
+</head>
+
+<body>
+    <span id="watermark" style="font-size:1.64rem;" unselectable="on">Powered by <span
+            style="font-size:1.64rem; color: #64c1b1">CYGEN GROUP</span></span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <a class="navbar-brand" href=#>HMS LAMJINGBA</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+
+            <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                <li class="nav-item admin-name" data-toggle="tooltip" data-placement="right">
+
+                    <img src="" alt="" class="img-ic">
+                    <span class="nav-link-text"><b style="font-size:16px">Receptionist</b></span>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a style="background-color:#64c1b1;" class="nav-link" href='/receptionistdashboard/'>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i>
+                        <span class="nav-link-text">Dashboard</span></a>
+                </li>
+
+                <!-- <li class="nav-item" data-toggle="tooltip" data-placement="right" >
+                    <a class="nav-link" href='/patient_list/'>
+                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                        <span class="nav-link-text">Patient</span></a>
+                </li> -->
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link" href='/physician_list_view/'>
+                        <i class="fa fa-user-md" aria-hidden="true"></i>
+                        <span class="nav-link-text">Doctor</span></a>
+                </li>
+
+
+
+            </ul>
+
+            <ul class="navbar-nav sidenav-toggler">
+                <li class="nav-item">
+                    <a class="nav-link text-center" id="sidenavToggler">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+
+                <li><a onclick="window.location.pathname='/logout/'" data-toggle="modal" data-target="#exampleModal"
+                        style="color:white;">
+                        Logout</a>
+
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="content-wrapper">
+        <div class="row">
+                <div class="col-3"><h1>Name :{{name}} </h1></div><div class="col-3"><h1>UHID : {{uhid}}</h1></div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div class=" col-xs-12">
+                    <a class="Laboratory" id="group">
+                        <div class="content-name2" style="height:40px;width: 160px;">
+                            <div class="panel-body" style="margin-top: -10px;">
+                                <div class="base">LABORATORY</div>
+                                <h3 class="no-margin">{{Nurses}}</h3>
+                            </div>
+                            <!-- <div class="images"><img src="{% static 'img/nurse.png' %}" alt=""></div> -->
+                        </div>
+                    </a>
+                </div>
+                <div class=" col-xs-12">
+                    <a class="OPD" id="group">
+                        <div class="content-name3" style="height:40px;width: 160px;">
+                            <div class="panel-body" style="margin-top: -10px;">
+                                <div class="base">OPD</div>
+                                <h3 class="no-margin">{{Lab_Technician}}</h3>
+                            </div>
+                            <!-- <div class="images"><img src="{% static 'img/blood-test.png' %}" alt=""></div> -->
+                        </div>
+                    </a>
+                </div>
+                <!-- <div class="col-xs-12">
+                    <a class="Medicine" id="group">
+                        <div class="content-name4" style="height:120px">
+                            <div class="panel-body">
+                                <div class="base">MEDICINE</div>
+                                <h3 class="no-margin">{{Pharmacist}}</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div> -->
+            </div>
+            <div class="col-9">
+                <div class=" col-xs-12">
+                    <div id="tableTitle" style="text-align: center;font-size:20px "></div>
+                    <table class="table table-bordered table-striped order-table table" id="opdTable"
+                        style="margin-top:0px">
+                        <thead>
+                            <tr id="lab">
+                                <th>Test Name</th>
+                                <th>Units</th>
+                                <th>Result</th>
+                                <th>Cost</th>
+                                <th>Remove</th>
+
+                            </tr>
+                            <tr id="opd">
+                                <th>Doctor Name</th>
+                                <th>Appointed On</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodydata">
+                        </tbody>
+                    </table><br>
+                    <div id="testbutton"><button class="btn">Generate Bill</button></div>
+                    <div id="opdbutton"><button class="btn">Generate Bill</button></div>
+
+                    <!-- <div id="errormessage" style="color:red;margin-top:20px;margin-left: 20px;font-size: 20px;"></div> -->
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/sb-admin.js' %}"></script>
+    <!-- <script src="{% static 'js/csrf.js' %}"></script> -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <!-- <script src="{% static 'js/adminscript.js' %}"></script> -->
+     <script src="{% static 'js/adminajax.js' %}"></script>
+    <script>
+        //gettestresults/Lhmr/?appointment=1
+        var totalopd ={{opdamount}}
+        var doctorid ={{doctor}}
+        var uhid = `{{uhid}}`
+        var app_id = `{{app_id}}`
+        function get_lab_tests_data(url, call_back) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data, status) {
+                    call_back(data, status);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // console.log( XMLHttpRequest.responseText);
+                    // console.log(XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText);
+                    return false;
+                }
+            });
+        }
+    </script>
+    <script>
+     
+        $(".Laboratory, .OPD").click(function () {
+            group = this.className
+            // alert(group)
+            
+             if (group == "OPD") {
+                url = '/consultation/' + app_id + "/"
+            }
+            else if (group == "Laboratory") {
+                url = "/gettestsresults/" + uhid + "/?appointment=" + app_id
+            }
+            var load_invoice = function () {
+                get_lab_tests_data(url, function (data, status) {
+                    if (group == "Laboratory") {
+                        labtable(data)
+                    }
+                    else if (group == "OPD") {
+                        opdtable(data)
+                    }
+                });
+            }
+            load_invoice();
+        });
+
+        function labtable(tbdata) {
+            console.log("tbdata",tbdata)
+            if(tbdata !=''){
+                $(".table").show();
+            var invoice_view = '';
+            var totalIds =""
+            var totalCost=0
+            var totalIds=[]
+            for (var i = 0; i < tbdata.length; i++) {
+                var alr = tbdata[i]
+                console.log(alr)
+                totalIds.push(alr.id);                
+                invoice_view += '<tr id="'+alr.id+'" class="active" >';
+                invoice_view += '<td class="activeId" style="display:none"><span  >' + alr.id + '<span></td>';
+                invoice_view += '<td><span>' + alr.test_id.description + '<span></td>';
+                invoice_view += '<td><span>' + alr.test_id.units + '<span></td>';
+                invoice_view += '<td><span>' + alr.result + '<span></td>';
+                invoice_view += '<td class="cost"><span>' + alr.test_id.cost + '<span></td>';
+                invoice_view += '<td onclick="toggle('+alr.id+','+alr.test_id.cost+','+totalCost+','+totalIds+')" style="text-align:center"><i class="fa fa-minus-circle"></td>';
+                totalCost+= Number(alr.test_id.cost);
+                invoice_view += '</tr>';
+                console.log(typeof totalIds)
+            }
+                invoice_view += '<tr>';
+                invoice_view += '<td colspan="3" style="text-align:right"><span>' + 'Total' + '<span></td><td ><span id="totalDisplay"></span><span id="beforeToggle">'+totalCost+'</span></td>';
+                
+                invoice_view += '</tr>';
+                $("#lab").show()
+                $("#opd").hide();
+                $("#testbutton").show();
+                $("#opdbutton").hide();
+                $("#bodydata").html(invoice_view);
+                $("#tableTitle").html("Lab Tests Bill");
+        }
+        else{
+            alert("no test details")
+           
+        }
+    }
+
+
+        function opdtable(tbdata) {
+            if(tbdata !=''){
+            var invoice_view = ""
+            var totalCost=0
+            // for (var i in tbdata) {
+            //     var alr = tbdata[i]
+                console.log("datadattadat",tbdata)
+                invoice_view += '<tr class="opdactive" >';
+                invoice_view += '<td>'+tbdata.doctor+'</td>';
+                invoice_view += '<td>'+tbdata.bookingdate+' '+tbdata.bookingtime.slice(0,-3)+'</td>';
+                var opdcost = {{opdamount}}
+                invoice_view += '<td>'+opdcost+'</td>';
+                invoice_view += '</tr>';
+                totalCost+=opdcost
+            // }
+            invoice_view += '<tr>';
+                invoice_view += '<td colspan="2" style="text-align:right"><span>' + 'Total' + '<span></td><td ><span id="totalDisplay"></span><span id="beforeToggle">'+totalCost+'</span></td>';
+                
+                invoice_view += '</tr>';
+            $("#opd").show()
+            $("#lab").hide()
+            $("#testbutton").hide();
+            $("#opdbutton").show();
+            $("#bodydata").html(invoice_view);
+            $("#tableTitle").html("OPD  Bill");
+
+            }
+            else{
+                alert("no data")
+            }
+        }
+      
+      
+      
+      
+      
+        function toggle(id,cost,totalCost,totalIds) {
+           
+            if( document.getElementById(id).style.display=='none' ){
+                
+                document.getElementById(id).style.display = '';
+            }
+            else{
+                document.getElementById(id).className="inactive"
+                document.getElementById(id).style.display = 'none';
+            }
+         
+            var cost=0
+            $("#bodydata .inactive").each(function() {
+                var ratingTd = $(this).find('td.cost');
+                cost+=Number(ratingTd.text())
+            
+            });
+            var total =0
+            $("#bodydata .active").each(function() {
+                var ratingTd = $(this).find('td.cost');
+                total+=Number(ratingTd.text())
+            
+            });
+
+            totalCost = total
+            $("#totalDisplay").html(totalCost)
+            $("#beforeToggle").hide();
+            console.log(arr)
+        }
+    
+    
+        $("#testbutton").click(function(){
+            
+            var  list_id= []
+            var totaltest = 0
+            $("#bodydata .active").each(function() {
+                var ratingTd = $(this).find('td.activeId');
+                list_id.push(Number(ratingTd.text()))
+                var ratingcost = $(this).find('td.cost');
+                totaltest+=Number(ratingcost.text())
+            });
+            console.log("ajax",list_id)
+            appointment(totaltest);
+            testData={
+                "amount": totaltest,
+                "appointment": app_id,
+                "group": 2,
+                "testids": list_id
+            }
+            $.ajax({
+                type: "POST",
+                url:"/billgenrate/?group=lab",
+                contentType: "application/json",
+                data:JSON.stringify(testData),
+                dataType: "json",
+                success: function (data, status) {
+                var bid =data.billid
+                    window.location.pathname="/billing/"+app_id+"/lab/"+bid+"/"
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // console.log( XMLHttpRequest.responseText);
+                    // console.log(XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText);
+                    return false;
+                }
+            });
+        })
+
+        $("#opdbutton").click(function(){
+
+            var  list_id= []
+            $("#bodydata .opdactive").each(function() {
+                var ratingTd = $(this).find('td.activeId');
+                list_id.push(Number(ratingTd.text()))
+
+            });
+            OpdData= {
+                "amount": totalopd,
+                "appointment": app_id,
+                "group": 1
+            }
+            appointment(totalopd);
+            $.ajax({
+                type: "POST",
+                url:"/billgenrate/?group=opd&billid=",
+                contentType: "application/json",
+                data : JSON.stringify(OpdData),
+                dataType: "json",
+                success: function (data, status) {
+                    var bid = data.billid
+                    window.location.pathname="/billing/"+app_id+"/opd/"+bid+"/"
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // console.log( XMLHttpRequest.responseText);
+                    // console.log(XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText);
+                    return false;
+                }
+            });
+        })
+    
+    </script>
+<script>
+  function appointment(localamount){
+      var amountdata = {
+        "amount": localamount,
+        "appointment":app_id
+              }
+
+            var allot_data = {
+                    "UHID": '{{uhid}}',
+                    "doc_link": [{{doctor}}],
+                };
+
+            assign_patient(allot_data, function (data, status) {
+                consultfee(amountdata, function (data, status){
+            });
+        });
+    }
+</script>
+
+</body>
+
+</html>

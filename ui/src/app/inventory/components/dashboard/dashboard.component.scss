@@ -1,0 +1,30 @@
+@mixin md-icon-size($size: 24px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+    line-height: $size;
+}
+
+.content {
+    padding: 1%;
+    .card {
+        margin: 1% 1%;
+        min-height: 35%;
+        text-align: center;
+        mat-card-header {
+            mat-icon {
+                transform: scale(2);
+            }
+        }
+        mat-card-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .card-content {
+            margin-top: 10%;
+            text-align: center;
+            font-size: 100px;
+            font-weight: bold;
+        }
+    }
+}

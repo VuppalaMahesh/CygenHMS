@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/sb-admin.css'%}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href=#>HMS LAMJINGBA</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+
+        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+            <li class="nav-item admin-name" data-toggle="tooltip" data-placement="right" title="Admin Name">
+
+                <!--<img src="img/" alt="" class="img-ic">-->
+                <span class="nav-link-text"><b style="font-size:16px">Doctor</b></span>
+            </li>
+            {% if appoint == 0 %}
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <a class="nav-link" href='/physiciandashboard/'>
+                    <i class="fa fa-tachometer" aria-hidden="true"></i>
+                    <span class="nav-link-text">Dashboard</span></a>
+            </li>
+            <!--<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Doctors">-->
+                <!--<a onclick="" style="background-color:#64c1b1;" class="nav-link" href='/patients/'>-->
+                    <!--<i class="fa fa-user-md" aria-hidden="true"></i>-->
+                    <!--<span class="nav-link-text">Patients</span></a>-->
+            <!--</li>-->
+            {% else %}
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <a class="nav-link" style="background-color:#64c1b1;" href='/physiciandashboard/'>
+                    <i class="fa fa-tachometer" aria-hidden="true"></i>
+                    <span class="nav-link-text">Dashboard</span></a>
+            </li>
+            <!--<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Doctors">-->
+                <!--<a onclick="" class="nav-link" href='/patients/'>-->
+                    <!--<i class="fa fa-user-md" aria-hidden="true"></i>-->
+                    <!--<span class="nav-link-text">Patients</span></a>-->
+            <!--</li>-->
+            {% endif %}
+        </ul>
+
+        <ul class="navbar-nav sidenav-toggler">
+            <li class="nav-item">
+                <a class="nav-link text-center" id="sidenavToggler">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+
+            <li><a onclick="window.location.pathname='/logout/'" data-toggle="modal" data-target="#exampleModal"
+                   style="color:white;">
+                Logout</a>
+
+            </li>
+        </ul>
+
+    </div>
+</nav>
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            {% if appoint == 0 %}
+            <h5 id="title">Patients</h5>
+            {% else %}
+            <h5 id="title">Today Appointments</h5>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12 ">
+                    <!--<div class="btn add-btn right"><i  class="fa fa-plus fa-lg adding doctor-adduser" aria-hidden="true"-->
+                    <!--title="Create New Doctor"></i>-->
+                    <!--</div>-->
+                    <div class="Search nodata">
+                        <input id="myInput" type="search" class="docinput form-control" data-table="order-table"
+                               placeholder="Search">
+                    </div>
+                </div>
+            </div>
+            <div class="manage-table">
+
+
+                <div class="manage-table">
+                    <table class="table table-bordered table-striped order-table table" style="    font-size: 13px;">
+                        <thead class="nodata">
+                        <tr>
+                            <th>UHID</th>
+                            <th>Name</th>
+                            <th>Profile</th>
+                            <th>EHR</th>
+                            <th>Summary</th>
+                            <th>Medication</th>
+                            <th>Vaccine</th>
+                            <th>Test</th>
+                        </tr>
+                        </thead>
+                        <tbody id="patientphysicianehrtable">
+                        <tr id="selectdoctor">
+                        </tr>
+
+                        </tbody>
+                        <div>
+                            <span class="noappoint" style="display:none">
+                                No Appointments Today
+                            </span>
+                        </div>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--patient alloted time -->
+<div class="modal fade" id="patientallotedtime" role="dialog" style="margin-top:0px">
+    <div class="modal-dialog">
+        <form>
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top: 14em;width: 800px;margin-left: -121px;">
+                <div>
+                    <button type="button" class="close" style="color:black" data-dismiss="modal">&times;</button>
+                    <!-- <h4 class="modal-title">Modal Header</h4> -->
+                </div>
+                <div class="modal-body" style="margin-left:150px;">
+
+                    <div class="col-md-9" id="patientbookedtime">
+                        <p style="color: #64c1b1;margin-left: 9em;"><b>Alloted Time</b></p>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--<div class="watermark">&copy; Copyright 2019, Cygen Group</div>-->
+<span id="watermark" style="font-size:1.64rem;" unselectable="on">Powered by <span
+        style="font-size:1.64rem; color: #64c1b1">CYGEN GROUP</span></span>
+<script>
+    var pat_id = '{{ pat_id }}';
+
+</script>
+<script>
+  $('#toggleNavPosition').click(function() {
+    $('body').toggleClass('fixed-nav');
+    $('nav').toggleClass('fixed-top static-top');
+  });
+
+
+
+</script>
+<script>
+        window.drf = {
+          csrfHeaderName: "X-CSRFTOKEN",
+          csrfCookieName: "csrftoken"
+        };
+
+</script>
+<script>
+  (function (document) {
+      'use strict';
+
+      var LightTableFilter =
+      (
+
+      function (Arr) {
+
+          var _input;
+
+          function _onInputEvent(e) {
+              _input = e.target;
+              var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+              Arr.forEach.call(tables, function (table) {
+                  Arr.forEach.call(table.tBodies, function (tbody) {
+                      Arr.forEach.call(tbody.rows, _filter);
+                  });
+              });
+          }
+
+          function _filter(row) {
+              var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+              row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+          }
+
+          return {
+              init: function () {
+                  var inputs = document.getElementsByClassName('docinput');
+                  Arr.forEach.call(inputs, function (input) {
+                      input.oninput = _onInputEvent;
+                  });
+              }
+          };
+      })(Array.prototype);
+
+      document.addEventListener('readystatechange', function () {
+          if (document.readyState === 'complete') {
+              LightTableFilter.init();
+          }
+      });
+
+  })(document);
+
+</script>
+<script>
+var curday = function(sp){
+today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //As January is 0.
+var yyyy = today.getFullYear();
+
+if(dd<10) dd='0'+dd;
+if(mm<10) mm='0'+mm;
+return (yyyy+sp+mm+sp+dd);
+};
+            var appointaccess = {{appoint}}
+           $(function () {
+if(appointaccess==1){
+var url = "/getappointedpatients/";
+}
+else{
+var url = "/getpatientsdoctor/";
+}
+    get_patientindoctor_data(url,function (data, status) {
+        var patient_view = ""
+        if (data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                var alr = data[i]
+                patient_view += '<tr >';
+                patient_view += '<td  ><span style="color: #64C1B1;font-weight: bolder;">' + alr.UHID + '</span></td>';
+                patient_view += '<td><span>' + alr.pat.first_name + " " + '</span><span>' + alr.pat.middle_name + " " + '</span><span>' + alr.pat.last_name + '</span></td>';
+                patient_view += '<td style="display:none"><span>' + alr.pat.last_name + '</span></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/patient_profile/' + String(alr.pat.id) + '/"class="fas fa-user-circle fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/health_record/' + String(alr.pat.id) + '/?bookingdate='+curday('-')+'" class="fa fa-file-alt fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/summary/'+String(alr.pat.id)+'/"class="fas fa-print fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/medicationdetails/' + String(alr.pat.id) + '/"class="fas fa-file-prescription fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/vaccinedetails/'+String(alr.pat.id)+'/"class="fas fa-syringe fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/testdetails/'+String(alr.pat.id)+'/"class="fas fa-vial fa-lg" ></a></td>';
+              //  patient_view += '<td ><a style="color: #64c1b1; " href="javascript:void(0)" data-id= "' + alr.UHID + '" class="allotedtime fa fa-clock-o fa-lg" data-toggle="modal" data-target="#patientallotedtime"></a></td>';
+            }
+
+            $("#patientphysicianehrtable").html(patient_view);
+        }
+        else{
+        $(".noappoint").show();
+        $(".nodata").hide();
+        }
+
+
+});
+var new_dialogallottime = function (id) {
+        var dlg = $("#doctor-form");
+        type = type || 'Create';
+//        var config = {
+//            autoOpen: true,
+//            height: 300,
+//            width: 350,
+//            modal: true,
+//            buttons: {
+//                "Create": save_doctor_data,
+//                "Cancel": function () {
+//                    dlg.dialog("close");
+//                }
+//            },
+//            close: function () {
+//                dlg.dialog("close");
+//            }
+//        };
+        alert("Hi");
+    };
+$(".allotedtime").button().click(new_dialogallottime);
+//patient ehr in nurse
+});
+</script>
+<script src="{% static 'js/csrf.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/adminscript.js' %}"></script>
+<script src="{% static 'js/adminajax.js' %}"></script>
+<script src="{% static 'js/sb-admin.js' %}"></script>
+</body>
+</html>

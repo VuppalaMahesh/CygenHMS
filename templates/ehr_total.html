@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>Page Title</title>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script id="__scripts__" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <!-- <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js" type="text/javascript"></script> -->
+    <link rel="stylesheet" href="{% static 'css2/bootstrap.min2.css' %}">
+    <script type="text/javascript" src="{% static 'js2/bootstrap.min2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js2/autogrow2.js' %}"></script>
+    <link href="{% static 'css2/finalehr.css' %}" rel="stylesheet">
+    <link href="{% static 'css2/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css2/navbar2.css'%}">
+        <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/sb-admin.css'%}">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/ehr.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href=# style="font-size: 20px; padding: 13px;">HMS LAMJINGBA</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+
+        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+            <li class="nav-item admin-name" data-toggle="tooltip" data-placement="right" >
+
+                <img src="img/" alt="" class="img-ic">
+                <span class="nav-link-text"><b style="font-size:16px">Doctor</b></span>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                <a style="background-color:#64c1b1;" class="nav-link" href='/physiciandashboard/'>
+                    <i class="fa fa-tachometer" aria-hidden="true"></i>
+                    <span class="nav-link-text">Dashboard</span></a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav sidenav-toggler">
+            <li class="nav-item">
+                <a class="nav-link text-center" id="sidenavToggler">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+
+            <li><a onclick="window.location.pathname='/logout/'" data-toggle="modal" data-target="#exampleModal"
+                   style="color:white; font-size: 16px;">
+                Logout</a>
+
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="content-wrapper">
+    <div class="manage-table">
+
+                    <div class="manage-table">
+                        <table class="table table-bordered table-striped order-table table"
+                               style="font-size: 13px;">
+                            <thead>
+                            <tr>
+                                <th>EHR History</th>
+                                <!--<th>EHR</th>-->
+                            </tr>
+                            </thead>
+                            <tbody id="totalehr">
+                            </tbody>
+                        </table>
+
+</div>
+    </div>
+</div>
+<script>
+    $(function () {
+    get_patient_appointment_dates(function (data, status) {
+        var totalehr_view = ""
+
+        if (data.length >= 0) {
+            for (var i = 0; i < data.length; i++) {
+                var alr = data[i]
+                var alrd =alr.appointments
+                for(var j=0;j<alrd.length;j++){
+                    var alrdata = alrd[j]
+                    date = alrdata.appointmentDate.split(' ')
+                    totalehr_view += '<tr>';
+                    totalehr_view += '<td><a style="color: #64c1b1; " href="/health_record/' + {{pat_id}} + '/?bookingdate='+date[0]+'" class="fa fa-file-alt fa-lg"></a></td></tr>';
+                    totalehr_view += '<td><span>' + alrdata.appointmentDate+ '</span></td>';
+
+                    <!--totalehr_view += '</tr>';-->
+                }
+
+            }
+            $("#totalehr").html(totalehr_view);
+
+        }
+    });
+});
+</script>
+<script>
+    function get_patient_appointment_dates(call_back){
+         $.ajax({
+             type: "GET",
+             url: "/api/patientappoints/"+UHID+"/",
+             contentType: "application/json",
+             dataType: "json",
+             success: function (data, status) {
+                    <!--console.log(data,'jj');-->
+                    call_back(data,status);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log( XMLHttpRequest.responseText);
+                console.log(XMLHttpRequest.status + ' ' +
+                    XMLHttpRequest.statusText);
+                return false;
+              }
+        });
+}
+</script>
+<script>
+ var UHID = "{{UHID}}"
+ var pat_id = {{pat_id}}
+</script>
+
+</body>
+</html>

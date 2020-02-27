@@ -1,0 +1,25 @@
+.container{
+    margin: 1% 1%;
+    .input-field {
+        width: 100%;
+    }
+    .print-only-content {
+        display: none;
+    }
+    #print-button {
+        float: right;
+    }
+    button {
+        width: 100%;
+        margin-top: 8%;
+    }
+    .table-container {
+        table {
+            width: 100%;
+        }
+        margin-top: 1%;
+        overflow: auto;
+        min-height: 30vh;
+        max-height: 65vh;
+    }
+}

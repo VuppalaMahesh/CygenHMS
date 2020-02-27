@@ -1,0 +1,21 @@
+.container {
+    margin: 1% 1%;
+    mat-icon {
+        margin-right: 1%;
+    }
+    .mat-form-field {
+        font-size: 14px;
+        width: 100%;
+    }
+    .search-bar {
+        margin: 0.5% 1%;
+    }
+    .table-container {
+        overflow: auto;
+        height: 72vh;
+        margin: 0.5% 1%;
+        table {
+            width: 100%;
+        }
+    }
+}

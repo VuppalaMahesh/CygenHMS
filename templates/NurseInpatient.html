@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/sb-admin.css'%}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+                <a class="navbar-brand" href=#>HMS LAMJINGBA</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" >
+
+                   <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                      <li class="nav-item admin-name" data-toggle="tooltip" data-placement="right" title="Admin Name">
+
+                          <span class="nav-link-text"><b style="font-size:16px">Nurse</b></span>
+                             </li>
+                      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                        <a  class="nav-link" href='/nursedashboard/'>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i>
+                            <span class="nav-link-text">Out-Patient</span></a>
+                           </li>
+
+                       <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                            <a style="background-color:#64c1b1;" class="nav-link" href='/NurseInpatient_table/'>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i>
+                            <span class="nav-link-text">In-Patient</span></a>
+                       </li>
+                  </ul>
+
+                  <ul class="navbar-nav sidenav-toggler">
+                    <li class="nav-item">
+                      <a class="nav-link text-center" id="sidenavToggler">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                  </ul>
+
+                  <ul class="navbar-nav ml-auto">
+                      <li>   <a onclick="window.location.pathname='/logout/'" data-toggle="modal" data-target="#exampleModal" style="color:white;" >
+                                        Logout</a>
+
+                      </li>
+                  </ul>
+                </div>
+            </nav>
+            
+    <div class="content-wrapper">
+       <div class="row">
+
+           
+                  <div id="GSCCModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                         <div class="modal-content">
+                           <div class="modal-header">
+                               <span id="ui-id-1" class="ui-dialog-title">Discharge/Transfer</span>
+                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;  </button>
+                           </div>
+                           
+                           <div class="modal-body" >
+                               
+                                 <div class="user-info">
+                                     
+                                     <div class="row">
+                                       
+                                         <button style="background-color: #F4F9F7; margin-right: 1em; margin-left: 8em;">Discharge</button>
+                                         <button style="background-color: #F4F9F7">Transfer</button>
+                                     </div>
+                                 </div>
+                           </div>
+
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" style="block-size: 2em;" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="row">
+                    <div class="col-md-12 "><span style="font-size: 26px;">IN-Patients</span>
+
+                        <div class="Search" style="padding:0px">
+                            <input id="myInput"  type="search" class="docinput form-control"
+                                data-table="order-table" placeholder="Search Patient">
+                        </div>
+                        <br>
+                    </div>
+                </div>
+
+                <div class="manage-table">
+                    <div id="transfer-form" >
+                            <form autocomplete="off">
+                                    <fieldset>
+                                        
+                                    </fieldset>
+                                </form>
+                    </div>
+                </div>       
+
+                    <div class="manage-table">
+                        <br>
+                        <table class="table table-bordered table-striped order-table table" style="    font-size: 13px;">
+                            <thead>
+                              <tr>
+                                  <th>UHID</th>
+                                  <th>Name</th>
+                                  <th>Profile</th>
+                                  <th>EHR</th>
+                                  <th>Summary</th>
+                                  <th>Medication</th>
+                                  <th>Vaccine</th>
+                                  <th>Test</th>
+                                  <th>Transfer/Discharge</th>
+                              </tr>
+                            </thead>
+                            <tbody id="Inpatientnursehrtable">
+                                <tr id="selectdoctor">
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+        </div>
+       </div>
+    </div>
+<span id="watermark" style="font-size:1.64rem;" unselectable="on">Powered by <span style="font-size:1.64rem; color: #64c1b1">CYGEN GROUP</span></span>
+<script>
+    var pat_id = '{{ pat_id }}';
+</script>
+
+<script>
+  $('#toggleNavPosition').click(function() {
+    $('body').toggleClass('fixed-nav');
+    $('nav').toggleClass('fixed-top static-top');
+  });
+</script>
+
+<script>
+        window.drf = {
+          csrfHeaderName: "X-CSRFTOKEN",
+          csrfCookieName: "csrftoken"
+        };
+      </script>
+
+<script src="{% static 'js/csrf.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<!-- <script src="{% static 'js/adminscript.js' %}"></script> -->
+<script src="{% static 'js/adminajax.js' %}"></script>
+<script src="{% static 'js/sb-admin.js' %}"></script>
+
+<script>
+$(function () {
+    get_inpatient_data(function (data, status) {
+        var patient_view = ""
+        if (data.length >= 0) {
+            for (var i = 0; i < data.length; i++) {
+                var alr = data[i]
+                patient_view += '<tr >';
+                patient_view += '<td  ><span  style="color: #64C1B1;font-weight: bolder;">' + alr.UHID + '</span></td>';
+                patient_view += '<td><span>' + alr.pat.first_name + ' ' + '</span><span>' + alr.pat.middle_name + ' ' + '</span><span>' + alr.pat.last_name + '</span></td>';
+                patient_view += '<td style="display:none"><span>' + alr.pat.last_name + '</span></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/patient-profile/' + String(alr.pat.id) + '/"class="fa fa-user-circle fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/health-record/' + String(alr.pat.id) + '/"class="fa fa-file-text fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/summary/'+String(alr.pat.id)+'/"class="fa fa-print fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/medicationdetails/' + String(alr.pat.id) + '/"class="fas fa-file-prescription fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/vaccinedetails/'+String(alr.pat.id)+'/"class="fas fa-syringe fa-lg" ></a></td>';
+                patient_view += '<td ><a style="color: #64c1b1; " href="/testdetails/'+String(alr.pat.id)+'/"class="fas fa-vial fa-lg" ></a></td>';
+                patient_view += '<td><a style="color: #64c1b1; " href="javascript:void(0)" data-id="'+ alr.pat.id +'" class="dischargeedit fa fa-plus fa-lg "></a> </td>';
+            }
+            $("#Inpatientnursehrtable").html(patient_view);
+        }
+    });
+});
+</script>
+<script>
+  var patient_new_dialog = function (type,app_id) {
+      
+        var dlg = $("#GSCCModal");
+        type = type || 'Transfer';
+        
+        var config = {
+            autoOpen: true,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons:{
+
+            },
+            close: function () {
+                dlg.dialog("close");
+            }
+        };
+        if (type === 'Transfer/Discharge') {
+            config.buttons['Discharge'] = function () {
+            };
+            config.buttons['Transfer'] = function () {
+              tranfer(app_id)
+            };
+            dlg.dialog(config); 
+           $('#GSCCModal').modal('show');
+        }
+          function redirect_tranfer() {
+            console.log("dssdsd",app_id)
+          }
+  }
+        
+  $(document).on('click', 'td a.dischargeedit', function () {
+    $('#GSCCModal').modal('show');
+    var app_id = $(this).data('id')
+    
+    $("#Discharge_button").click(function(){
+          bed
+          discharge_patient
+        })
+        $("#Transfer_button").click(function(){
+
+        })
+        console.log("sdds", $(this).data('id'))
+        return false;
+    });
+
+ 
+</script>
+<script>
+function get_inpatient_data(call_back){
+         $.ajax({
+             type: "GET",
+             url: "/inpatients/",
+             contentType: "application/json",
+             dataType: "json",
+             success: function (data, status) {
+                    call_back(data,status);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                //Process error actions
+                console.log( XMLHttpRequest.responseText);
+                console.log(XMLHttpRequest.status + ' ' +
+                    XMLHttpRequest.statusText);
+                return false;
+                }
+          });
+}
+</script>
+
+</body>
+</html>
